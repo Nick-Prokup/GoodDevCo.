@@ -36,7 +36,26 @@ public class LoginPage extends JFrame implements ActionListener {
 		panel.add(newAcc);
 		
 		panel.setBorder(new EmptyBorder(10,10,10,10));
-		submit.addActionListener(this);
+		
+		submit.addActionListener(new ActionListener( ) {
+			public void actionPerformed(ActionEvent e) {
+				String email = email_text.getText();
+				String pswd = pswd_text.getText();
+				
+				if (email.equals("admin") && pswd.equals("admin")) {
+					out.setText("Login confirmed");
+					new HomePage();
+				} else {
+					out.setText("Invalid login info");
+				}
+			}
+		});
+		
+		newAcc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new CreateAccount();
+			}
+		});
 		
 		logFrame = new JFrame();
 		logFrame.add(panel);
@@ -48,20 +67,12 @@ public class LoginPage extends JFrame implements ActionListener {
 		logFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 	}
-	
-	
-	public static void main(String[] args) {
-		new LoginPage();
-	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String email = email_text.getText();
-		String pswd = pswd_text.getText();
+		// TODO Auto-generated method stub
 		
-		if (email.equals("admin") && pswd.equals("admin")) {
-			out.setText("Login confirmed");
-		} else {
-			out.setText("Invalid login info");
-		}
-	}
+	}	
 }
+
+
