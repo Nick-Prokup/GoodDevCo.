@@ -59,7 +59,7 @@ public class LoginPage extends JFrame implements ActionListener {
 				// verification of the login credentials 
 				if (email.equals("admin") && pswd.equals("admin") || loginVerification(email, pswd)) {
 					out.setText("Login confirmed");
-					new HomePage();
+					Account.HomePage();
 				} else {
 					out.setText("Invalid login info");
 				}
