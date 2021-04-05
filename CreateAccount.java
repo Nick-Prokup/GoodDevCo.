@@ -35,7 +35,7 @@ public class CreateAccount extends JFrame implements ActionListener {
 		email_label = new JLabel("Register email: ");
 		email_text = new JTextField();
 
-		pswd_label = new JLabel("Regiser password: ");
+		pswd_label = new JLabel("Register password: ");
 		pswd_text = new JPasswordField();
 		pswd_label2 = new JLabel("Verify password: ");
 		pswd_text2 = new JPasswordField();
