@@ -110,7 +110,7 @@ public class Account extends JFrame implements ActionListener {
 		mainPanel.add(panel, BorderLayout.NORTH);
 		mainPanel.add(songsPanel, BorderLayout.EAST);
 		mainPanel.add(acctPanel, BorderLayout.WEST);
-		mainPanel.add(searchPanel, BorderLayout.SOUTH);
+		mainPanel.add(searchPanel, BorderLayout.CENTER);
 		
 		homePage.setTitle("GoodTunez Home");
 		homePage.setSize(650, 450);
