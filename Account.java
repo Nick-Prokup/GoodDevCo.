@@ -1,5 +1,7 @@
 package CSE201;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -9,10 +11,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Account extends JFrame implements ActionListener {
-	String name, email, dob;
+	String name, email, dob, accType;
 	private String pswd;
 
 	public static void main(String[] args) {
@@ -20,11 +27,12 @@ public class Account extends JFrame implements ActionListener {
 
 	}
 
-	Account(String name, String email, String pswd, String dob) {
+	Account(String name, String email, String pswd, String dob, String type) {
 		this.name = name;
 		this.email = email;
 		this.pswd = pswd;
 		this.dob = dob;
+		this.accType = type;
 	}
 
 	public String getName() {
@@ -41,6 +49,14 @@ public class Account extends JFrame implements ActionListener {
 
 	public String getDob() {
 		return this.dob;
+	}
+	
+	public String getAccType() {
+		return this.accType;
+	}
+	
+	public String toString() {
+		return this.name + "," + this.email + "," + this.pswd + "," + this.dob + "," + this.accType;
 	}
 	
 	/**
@@ -68,7 +84,13 @@ public class Account extends JFrame implements ActionListener {
 		final JComboBox<String> genreBox = new JComboBox<String>(genres);
 		
 		JButton profile = new JButton("Name");
-		JButton type = new JButton("User Type");
+		JButton type = new JButton("Add Songs");
+		type.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				songPanel();
+			}
+			
+		});
 		JButton playlists = new JButton("Playlists");
 		JButton albums = new JButton("Albums?");
 		JButton displayBox = new JButton("Display Data Base Info Here");
@@ -125,22 +147,140 @@ public class Account extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public static void writeSongToFile(Song song) throws FileNotFoundException {
+		try (FileWriter fw = new FileWriter("SongList.txt", true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				PrintWriter out = new PrintWriter(bw)) {
+			out.println(song.toString());
+
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	public static void addSong(String name, String artist, int year, String genre) throws FileNotFoundException {
+		Song song = new Song(name, artist, year, genre);
+		writeSongToFile(song);
+	}
+	
+	public static void songPanel() {
+		JFrame addSong;
+		JPanel info;
+		JLabel name_label, artist_label, year_label, genre_label, sub_label;
+		JTextField name_text, artist_text, year_text, genre_text;
+		JButton submit;
+		
+		name_label = new JLabel("Enter name of song: ");
+		artist_label = new JLabel("Enter artist name: ");
+		year_label = new JLabel("Enter year song was made: ");
+		genre_label = new JLabel("Enter song genre: ");
+		sub_label = new JLabel();
+		
+		name_text = new JTextField();
+		artist_text = new JTextField();
+		year_text = new JTextField();
+		genre_text = new JTextField();
+		
+		submit = new JButton("Add song to database");
+		
+		info = new JPanel(new GridLayout(6,2));
+		info.add(name_label);
+		info.add(name_text);
+		info.add(artist_label);
+		info.add(artist_text);
+		info.add(year_label);
+		info.add(year_text);
+		info.add(genre_label);
+		info.add(genre_text);
+		
+		info.add(sub_label);
+		info.add(submit);
+		
+		addSong = new JFrame();
+		addSong.add(info);
+		
+		addSong.setTitle("GoodTunez Create Account");
+		addSong.setSize(650, 450);
+		addSong.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		addSong.setVisible(true);
+		addSong.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		submit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					addSong(name_text.getText(), artist_text.getText(), Integer.parseInt(year_text.getText()), genre_text.getText());
+				} catch (NumberFormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				addSong.dispose();
+			}
+		});
+	}
 }
 
 class Artist {
+	String name, email, dob;
+	private String pswd;
+	Artist(String name, String email, String pswd, String dob) {
+		this.name = name;
+		this.email = email;
+		this.pswd = pswd;
+		this.dob = dob;
+	}
+	public String getName() {
+		return this.name;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public String getPswd() {
+		return this.pswd;
+	}
+
+	public String getDob() {
+		return this.dob;
+	}
+	
 
 }
 
 class Listener {
+	String name, email, dob;
+	private String pswd;
+	Listener(String name, String email, String pswd, String dob) {
+		this.name = name;
+		this.email = email;
+		this.pswd = pswd;
+		this.dob = dob;
+		}
+	public String getName() {
+		return this.name;
+	}
 
-}
+	public String getEmail() {
+		return this.email;
+	}
+
+	public String getPswd() {
+		return this.pswd;
+	}
+
+	public String getDob() {
+		return this.dob;
+	}
+ }
 
 class Admin {
 
 	public void editAccount() {
 
 	}
-
-}
-
 }
