@@ -22,13 +22,14 @@ public class CreateAccount extends JFrame implements ActionListener {
 
 	CreateAccount() {
 		JFrame createAcc;
-		JPanel info, butPanel;
+		JPanel info;
 		JLabel email_label, pswd_label, pswd_label2, name_label, dob_label, type_label, sub_label;
-		JTextField email_text, dob_text, name_text;
+		JTextField email_text, dob_text, name_text, type_text;
 		JPasswordField pswd_text, pswd_text2;
-		JRadioButton rad_listener, rad_artist;
-		JButton submit;
 
+		JButton submit;
+		
+//		String but_selc = "";
 		name_label = new JLabel("Enter full name: ");
 		name_text = new JTextField();
 
@@ -44,18 +45,12 @@ public class CreateAccount extends JFrame implements ActionListener {
 		dob_text = new JTextField("mm/dd/yyyy");
 
 		type_label = new JLabel("Type of account: ");
-		rad_listener = new JRadioButton("Listener");
-		rad_artist = new JRadioButton("Music Artist");
-
-		ButtonGroup typeAcc = new ButtonGroup();
-		typeAcc.add(rad_listener);
-		typeAcc.add(rad_artist);
-
+		type_text = new JTextField("Listener or Artist");
+			
 		sub_label = new JLabel("Create account: ");
 		submit = new JButton("Submit");
 
-		info = new JPanel(new GridLayout(9, 2));
-		butPanel = new JPanel(new GridLayout(1, 2));
+		info = new JPanel(new GridLayout(10, 2));
 
 		info.add(name_label);
 		info.add(name_text);
@@ -72,9 +67,7 @@ public class CreateAccount extends JFrame implements ActionListener {
 		info.add(dob_text);
 
 		info.add(type_label);
-		butPanel.add(rad_listener);
-		butPanel.add(rad_artist);
-		info.add(butPanel);
+		info.add(type_text);
 
 		info.add(sub_label);
 		info.add(submit);
@@ -95,9 +88,10 @@ public class CreateAccount extends JFrame implements ActionListener {
 				String pswd = pswd_text.getText();
 				String pswd2 = pswd_text2.getText();
 				String dob = dob_text.getText();
+				String type = type_text.getText();
 
-				if (verifyPswd(pswd, pswd2)) {
-					Account newUser = new Account(name, email, pswd, dob);
+				if (verifyPswd(pswd, pswd2, type)) {
+					Account newUser = new Account(name, email, pswd, dob, type);
 					try {
 						writeToFile(newUser);
 					} catch (FileNotFoundException e1) {
@@ -105,17 +99,23 @@ public class CreateAccount extends JFrame implements ActionListener {
 					}
 					createAcc.dispose();
 				} else {
-					sub_label.setText("Invalid password try again");
+					sub_label.setText("Invalid password or account type try again");
 				}
 			}
 		});
 	}
 
-	public boolean verifyPswd(String pswd, String pswd2) {
+	public boolean verifyPswd(String pswd, String pswd2, String type) {
 		boolean match = false;
 
 		if (pswd.equals(pswd2) && pswd.length() >= 8) {
 			match = true;
+		}
+		
+		if (type.equals("Listener") || type.equals("Artist")) {
+			match = true;
+		} else {
+			match = false;
 		}
 		return match;
 	}
@@ -124,7 +124,7 @@ public class CreateAccount extends JFrame implements ActionListener {
 		try (FileWriter fw = new FileWriter("AccountList.txt", true);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter out = new PrintWriter(bw)) {
-			out.println(acc.getName() + "," + acc.getEmail() + "," + acc.getPswd() + "," + acc.getDob());
+			out.println(acc.toString());
 
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
