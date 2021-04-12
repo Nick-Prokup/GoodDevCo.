@@ -1,3 +1,5 @@
+package CSE201;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
@@ -59,6 +61,7 @@ public class LoginPage extends JFrame implements ActionListener {
 				// verification of the login credentials 
 				if (email.equals("admin") && pswd.equals("admin") || loginVerification(email, pswd)) {
 					out.setText("Login confirmed");
+					logFrame.dispose();
 					Account.HomePage();
 				} else {
 					out.setText("Invalid login info");
@@ -102,7 +105,14 @@ public class LoginPage extends JFrame implements ActionListener {
 			while ((line = in.readLine()) != null) {
 				// reading each account by commas to find email and password as an array element
 				accInfo = line.split(",");
+				if (accInfo[4].equals("Listener")) {
+					Listener currUser = new Listener(accInfo[0], accInfo[1], accInfo[2], accInfo[3]);
+				} else if (accInfo[4].equals("Artist")) {
+					Artist currUser = new Artist(accInfo[0], accInfo[1], accInfo[2], accInfo[3]);
+				}
+				
 				if (accInfo[1].equals(email) && accInfo[2].equals(pswd)) {
+					
 					return true;
 				}
 			}
