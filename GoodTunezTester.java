@@ -43,4 +43,12 @@ class GoodTunezTester {
 		assertTrue(acc.verifyPswd("pswd", "pswd", "Listener"));
 		assertFalse(acc.verifyPswd("pswd", "badPswd", "false"));
 	}
+	
+	@ Test
+	void searchBarTest() {
+		Song song1 = new Song("Bohemian Rhapsody", "Queen", 1975, "Rock");
+		
+		assertEquals(song1.toString(), searchBarReturn.toString());
+		assertFalse(song1.toString(), searchBarReturn.toString());
+	}
 }
