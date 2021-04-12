@@ -1,6 +1,7 @@
 package CSE201;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,12 +11,17 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 public class Account extends JFrame implements ActionListener {
@@ -64,8 +70,8 @@ public class Account extends JFrame implements ActionListener {
 	 */
 	public static void HomePage() {
 		JFrame homePage;
-		JPanel acctPanel = new JPanel(new GridLayout(5,1)), panel = new JPanel(), searchPanel = new JPanel(new GridLayout(3,1)),
-				songsPanel = new JPanel(), mainPanel = new JPanel(new BorderLayout());
+		JPanel acctPanel = new JPanel(new GridLayout(5,1)), panel = new JPanel(), searchPanel = new JPanel(new FlowLayout()),
+				tempSearchPanel = new JPanel(), songsPanel = new JPanel(), mainPanel = new JPanel(new BorderLayout());
 		JLabel genre, era, songs, account, search;
 		
 		homePage = new JFrame();
@@ -75,13 +81,9 @@ public class Account extends JFrame implements ActionListener {
 		// display labels 
 		genre = new JLabel("Search by Genre:");
 		era = new JLabel("Search by Era:");
-		songs = new JLabel("Liked Songs: \t\t\t");
+		songs = new JLabel("Liked Songs: \n");
 		account = new JLabel("Your Account: ");
-		search = new JLabel("Search for song: ");
-		
-		// define options
-		String[] genres = { "Alernative", "Country", "Hip Hop / Rap", "Rock" };
-		final JComboBox<String> genreBox = new JComboBox<String>(genres);
+		search = new JLabel("Search results: ");
 		
 		JButton profile = new JButton("Name");
 		JButton type = new JButton("Add Songs");
@@ -91,21 +93,47 @@ public class Account extends JFrame implements ActionListener {
 			}
 			
 		});
+		
 		JButton playlists = new JButton("Playlists");
-		JButton albums = new JButton("Albums?");
-		JButton displayBox = new JButton("Display Data Base Info Here");
+		JButton albums = new JButton("Albums");
 		
-		// add box
-		genreBox.setVisible(true);
-				
-		JButton searchB = new JButton("Search");
-		
-		
+		// define options
+		String[] genres = { "Alernative", "Country", "Hip Hop / Rap", "Rock" };
+		final JComboBox<String> genreBox = new JComboBox<String>(genres);
+
 		String[] eras = { "70s", "80s", "90s", "2000's", "2010s", "Current" };
 		final JComboBox<String> eraBox = new JComboBox<String>(eras);
 		
+		// add box
+		genreBox.setVisible(true);
+
 		// add boxes and panels
 		eraBox.setVisible(true);
+		
+		String gSelection = (String)genreBox.getSelectedItem();
+		String eSelection = (String)eraBox.getSelectedItem();
+
+		// search button
+		JButton searchB = new JButton("Search");
+		searchB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				findSong(gSelection, eSelection);
+			}
+
+		});
+		
+		tempSearchPanel.add(search);		
+		String rows[][] = { {" Name ", " Artist ", " Year ", " Genre "},
+				{" info ", " display ", " here ", " after "},
+				{" info ", " display ", " here ", " after "}, 
+				{" info ", " display ", " here ", " after "}}; 
+		String columns[] = {" Name ", " Artist ", " Year ", " Genre "};
+		JTable displayBox = new JTable(rows, columns);		 
+		tempSearchPanel.add(displayBox);
+		
+		JTextField tf1 = new JTextField("Search Bar\t\t\t\t\t\t\t\t\t\t\t\t");
+		searchPanel.add(tf1);
+		searchPanel.add(tempSearchPanel, BorderLayout.CENTER);
 		
 		// add the variables to the panels
 		panel.add(genre);
@@ -115,17 +143,22 @@ public class Account extends JFrame implements ActionListener {
 		panel.add(eraBox);
 		panel.add(searchB);
 		
+		// songs list (liked songs)
 		songsPanel.add(songs);
+		DefaultListModel<String> liked = new DefaultListModel<>();
+		liked.addElement("\n Song Name 1 \n");
+		liked.addElement("Song Name 2 \n");
+		liked.addElement("Song Name 3 \n");
+		liked.addElement("Song Name 4 \n");
+		JList<String> list = new JList<>(liked);
+		songsPanel.add(list);
 		
+		// account panel info addition
 		acctPanel.add(account);
 		acctPanel.add(profile);
 		acctPanel.add(type);
 		acctPanel.add(playlists);
 		acctPanel.add(albums);
-		
-		searchPanel.add(search);
-		searchPanel.add(new JTextField());
-		searchPanel.add(displayBox);
 
 		
 		// homePage panel adding
@@ -146,6 +179,23 @@ public class Account extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public static void findSong(String genre, String era) {
+		// check file for songs of these parameters
+		Scanner in = new Scanner("SongList.txt");
+		while (in.hasNextLine()) {
+			String line = in.nextLine();
+
+			if (line.contains(genre) && line.contains(era)) {
+				System.out.println(line);
+			}
+		}
+
+		in.close();
+		
+		// populate variables with the song info to be in displayBox
+		System.out.println(genre + " " + era);
 	}
 	
 	public static void writeSongToFile(Song song) throws FileNotFoundException {
