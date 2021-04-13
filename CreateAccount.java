@@ -28,8 +28,7 @@ public class CreateAccount extends JFrame implements ActionListener {
 		JPasswordField pswd_text, pswd_text2;
 
 		JButton submit;
-		
-//		String but_selc = "";
+
 		name_label = new JLabel("Enter full name: ");
 		name_text = new JTextField();
 
@@ -46,7 +45,7 @@ public class CreateAccount extends JFrame implements ActionListener {
 
 		type_label = new JLabel("Type of account: ");
 		type_text = new JTextField("Listener or Artist");
-			
+
 		sub_label = new JLabel("Create account: ");
 		submit = new JButton("Submit");
 
@@ -111,7 +110,7 @@ public class CreateAccount extends JFrame implements ActionListener {
 		if (pswd.equals(pswd2) && pswd.length() >= 8) {
 			match = true;
 		}
-		
+
 		if (type.equals("Listener") || type.equals("Artist")) {
 			match = true;
 		} else {
@@ -121,6 +120,7 @@ public class CreateAccount extends JFrame implements ActionListener {
 	}
 
 	public void writeToFile(Account acc) throws FileNotFoundException {
+
 		try (FileWriter fw = new FileWriter("AccountList.txt", true);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter out = new PrintWriter(bw)) {
