@@ -1,1 +1,6 @@
-Owen Campbell,owen19campbell@gmail.com,passwordenter,05/02/2002
+Lil Nas X,exampleArtist@gmail.com,Password1,mm/dd/yyyy,Artist
+Owen Campbell,exampleListener@gmail.com,Password1,05/02/2002,Listener
+Artist,newArtistEmail.com,Password1,mm/dd/yyyy,Artist
+test listener,testListener.com,Password1,mm/dd/yyyy,Listener
+testAccount,testAccount2021.com,Password1,mm/dd/yyyy,Artist
+John Mayer,jMayer@gmail.com,Password1,12/01/1994,Artist
