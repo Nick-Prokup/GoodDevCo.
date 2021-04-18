@@ -227,6 +227,9 @@ public class Account extends JFrame implements ActionListener {
 		System.out.println(genre + " " + era);
 	}
 
+	public static Song searchBarReturn(String song) {
+		return null;
+	}
 	public static void writeSongToFile(Song song) throws FileNotFoundException {
 		try (FileWriter fw = new FileWriter("SongList.txt", true);
 				BufferedWriter bw = new BufferedWriter(fw);
