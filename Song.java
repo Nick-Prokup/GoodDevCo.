@@ -7,11 +7,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Song {
-	private String name, artist, genre;
+	private String name, artist, genre, album;
 	private int year;
-	public Song(String name, String artist, int year, String genre) {
+	public Song(String name, String artist, String album, int year, String genre) {
 		this.name = name;
 		this.artist = artist;
+		this.album = album;
 		this.year = year;
 		this.genre = genre;
 	}
@@ -24,6 +25,9 @@ public class Song {
 		return this.artist;
 	}
 	
+	public String getAlbum() {
+		return this.album;
+	}
 	public int getYear() {
 		return this.year;
 	}
