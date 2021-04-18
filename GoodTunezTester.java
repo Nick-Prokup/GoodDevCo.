@@ -8,7 +8,7 @@ class GoodTunezTester {
 
 	@Test
 	void testListner() {
-		Listener l1 = new Listener("Owen Campbell", "yes.com", "pswd", "05/02/2002");
+		Account l1 = new Account("Owen Campbell", "yes.com", "pswd", "05/02/2002", "Listener");
 		
 		System.out.println(l1.getClass());
 		
@@ -21,7 +21,7 @@ class GoodTunezTester {
 	
 	@Test
 	void testArtist() {
-		Artist a1 = new Artist("John Mayer", "jMayer.com", "pswd", "12/01/1994");
+		Account a1 = new Account("John Mayer", "jMayer.com", "pswd", "12/01/1994", "Artist");
 		System.out.println(a1.getClass());
 		assertEquals(a1.getName(), "John Mayer");
 		assertEquals(a1.getEmail(), "jMayer.com");
@@ -46,9 +46,9 @@ class GoodTunezTester {
 	
 	@ Test
 	void searchBarTest() {
-		Song song1 = new Song("Bohemian Rhapsody", "Queen", 1975, "Rock");
+		Song song1 = new Song("Bohemian Rhapsody", "Queen", "Album", 1975, "Rock");
 		
-		assertEquals(song1.toString(), searchBarReturn.toString());
-		assertFalse(song1.toString(), searchBarReturn.toString());
+		assertEquals(song1.toString(), searchBarReturn(song1).toString());
+		assertEquals("Song not in database", searchBarReturn("Happy Birthday Song").toString());
 	}
 }
