@@ -46,9 +46,15 @@ class GoodTunezTester {
 	
 	@ Test
 	void searchBarTest() {
-		Song song1 = new Song("Bohemian Rhapsody", "Queen", "Album", 1975, "Rock");
+		String song1 = "Bohemian Rhapsody,Queen,Album,1975,Rock";
+		String song2 = null;
 		
-		assertEquals(song1.toString(), searchBarReturn(song1).toString());
-		assertEquals("Song not in database", searchBarReturn("Happy Birthday Song").toString());
+		Song s1 = new Song("Bohemian Rhapsody", "Queen", "Album", 1975, "Rock");
+		Song s2 = null;
+		
+		assertTrue(s1.equals(Account.searchBarReturn(song1)));
+		assertFalse(s2.equals(Account.searchBarReturn(song1)));
+		assertEquals(song1.toString(), Account.searchBarReturn(song1).toString());
+		assertEquals("Song not in database", Account.searchBarReturn(song2).toString());
 	}
 }
