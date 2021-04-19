@@ -141,33 +141,33 @@ public class Account extends JFrame implements ActionListener {
 		// add boxes and panels
 		eraBox.setVisible(true);
 
-				// search button box
-	    JButton searchBox = new JButton("Search b");
-	    
-	    searchBox.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		String gSelection = (String) genreBox.getSelectedItem();
-	    		String eSelection = (String) eraBox.getSelectedItem();
-	    		try {
+		// search button box
+		JButton searchBox = new JButton("Search b");
+
+		searchBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String gSelection = (String) genreBox.getSelectedItem();
+				String eSelection = (String) eraBox.getSelectedItem();
+				try {
 					findSong(gSelection, eSelection);
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-	    	}
-	    	
-	    });
+			}
+
+		});
 
 		// search button
 		JButton searchB = new JButton("Search");
-		
+
 		JTextField searchBar = new JTextField(45);
 		searchPanel.add(searchBar);
 		searchPanel.add(searchB);
 		searchPanel.add(tempSearchPanel, BorderLayout.CENTER);
-		
+
 		// testing JLabel to print search functionality
-		
+
 		searchB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String searchQuery;
@@ -185,14 +185,10 @@ public class Account extends JFrame implements ActionListener {
 		JTable displayBox = new JTable(rows, columns);
 		tempSearchPanel.add(displayBox);
 
-		JTextField tf1 = new JTextField("Search Bar\t\t\t\t\t\t\t\t\t\t\t\t");
-		searchPanel.add(tf1);
-		searchPanel.add(tempSearchPanel, BorderLayout.CENTER);
-
 		// add the variables to the panels
 		panel.add(genre);
 		panel.add(genreBox);
-		panel.add(searchB);
+		panel.add(searchBox);
 		panel.add(era);
 		panel.add(eraBox);
 
@@ -251,9 +247,6 @@ public class Account extends JFrame implements ActionListener {
 		System.out.println(genre + " " + era);
 	}
 
-	public static Song searchBarReturn(String song) {
-		return null;
-	}
 	public static void writeSongToFile(Song song) throws FileNotFoundException {
 		try (FileWriter fw = new FileWriter("SongList.txt", true);
 				BufferedWriter bw = new BufferedWriter(fw);
@@ -431,6 +424,10 @@ public class Account extends JFrame implements ActionListener {
 				addSong.dispose();
 			}
 		});
+	}
+
+	public Song searchBarReturn(String song) {
+		return null;
 	}
 
 	public static void songList() throws IOException {
