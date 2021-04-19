@@ -141,14 +141,38 @@ public class Account extends JFrame implements ActionListener {
 		// add boxes and panels
 		eraBox.setVisible(true);
 
-		String gSelection = (String) genreBox.getSelectedItem();
-		String eSelection = (String) eraBox.getSelectedItem();
+				// search button box
+	    JButton searchBox = new JButton("Search b");
+	    
+	    searchBox.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		String gSelection = (String) genreBox.getSelectedItem();
+	    		String eSelection = (String) eraBox.getSelectedItem();
+	    		try {
+					findSong(gSelection, eSelection);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	    	}
+	    	
+	    });
 
 		// search button
 		JButton searchB = new JButton("Search");
+		
+		JTextField searchBar = new JTextField(45);
+		searchPanel.add(searchBar);
+		searchPanel.add(searchB);
+		searchPanel.add(tempSearchPanel, BorderLayout.CENTER);
+		
+		// testing JLabel to print search functionality
+		
 		searchB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				findSong(gSelection, eSelection);
+				String searchQuery;
+				searchQuery = searchBar.getText();
+				// send the search into database find method
 			}
 
 		});
@@ -171,7 +195,6 @@ public class Account extends JFrame implements ActionListener {
 		panel.add(searchB);
 		panel.add(era);
 		panel.add(eraBox);
-		panel.add(searchB);
 
 		// songs list (liked songs)
 		songsPanel.add(songs);
@@ -210,18 +233,19 @@ public class Account extends JFrame implements ActionListener {
 
 	}
 
-	public static void findSong(String genre, String era) {
+	public static void findSong(String genre, String era) throws FileNotFoundException {
 		// check file for songs of these parameters
-		Scanner in = new Scanner("SongList.txt");
-		while (in.hasNextLine()) {
-			String line = in.nextLine();
-
-			if (line.contains(genre) && line.contains(era)) {
-				System.out.println(line);
-			}
-		}
-
-		in.close();
+//		File songFile = new File("SongList.txt");
+//		Scanner in = new Scanner(songFile);
+//		while (in.hasNextLine()) {
+//			String line = in.nextLine();
+//
+//			if (line.contains(genre)) {
+//				System.out.println(line);
+//			}
+//		}
+//
+//		in.close();
 
 		// populate variables with the song info to be in displayBox
 		System.out.println(genre + " " + era);
