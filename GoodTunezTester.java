@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class GoodTunezTester {
 
+	// Tester method to identify that the attributes of the account (Grey)
 	@Test
 	void testListner() {
 		Account l1 = new Account("Owen Campbell", "yes.com", "pswd", "05/02/2002", "Listener");
@@ -19,6 +20,7 @@ class GoodTunezTester {
 		
 	}
 	
+	// Tester method to identify that the attributes of the artists (Grey) 
 	@Test
 	void testArtist() {
 		Account a1 = new Account("John Mayer", "jMayer.com", "pswd", "12/01/1994", "Artist");
@@ -29,6 +31,7 @@ class GoodTunezTester {
 		assertEquals(a1.getDob(), "12/01/1994");
 	}
 	
+	// Tester method to verify that the login is functional (Black)
 	@Test
 	void loginVerificationTest() {
 		LoginPage log = new LoginPage();
@@ -36,12 +39,26 @@ class GoodTunezTester {
 		assertFalse(log.loginVerification("jMayer.com", "badPswd"));
 	}
 	
+	// Tester method to verify password (Black)
 	@Test 
 	void pswdVerificationTest() {
 		CreateAccount acc = new CreateAccount();
 		
 		assertTrue(acc.verifyPswd("pswd", "pswd", "Listener"));
 		assertFalse(acc.verifyPswd("pswd", "badPswd", "false"));
+	}
+	
+	// Tester method to prove that user is able to login
+	@Test
+	void loginAbility() {
+		
+		
+	}
+	
+	@Test
+	void searchBoxTest() {
+		// when the box is selected, get the item from combo box when search is hit
+		// return the information within the boxes. 
 	}
 	
 	@ Test
