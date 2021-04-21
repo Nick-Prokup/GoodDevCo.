@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class Account extends JFrame implements ActionListener {
+		// global variables
 	String name, email, dob, accType;
 	private String pswd;
 
@@ -37,6 +38,15 @@ public class Account extends JFrame implements ActionListener {
 
 	}
 
+	/**
+	 * This is the full constructor for the account class
+	 * 
+	 * @param name, String variable representing account name 
+	 * @param email, String variable representing account email 
+	 * @param pswd, String variable representing account pswd
+	 * @param dob, String variable representing account date of birth  
+	 * @param type, String variable representing account type 
+	 */
 	Account(String name, String email, String pswd, String dob, String type) {
 		this.name = name;
 		this.email = email;
@@ -45,26 +55,55 @@ public class Account extends JFrame implements ActionListener {
 		this.accType = type;
 	}
 
+	/**
+	 * Getter method of the name variable
+	 * 
+	 * @return name, String of current name
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * Getter method of the email variable
+	 * 
+	 * @return email, String of current email
+	 */
 	public String getEmail() {
 		return this.email;
 	}
 
+	/**
+	 * Getter method of the pswd variable
+	 * 
+	 * @return pswd, String of current pswd
+	 */
 	public String getPswd() {
 		return this.pswd;
 	}
 
+	/**
+	 * Getter method of the date of birth variable
+	 * 
+	 * @return dob, String of current date of birth
+	 */
 	public String getDob() {
 		return this.dob;
 	}
 
+	/**
+	 * Getter method of the type variable
+	 * 
+	 * @return type, String of current type
+	 */
 	public String getAccType() {
 		return this.accType;
 	}
 
+	/**
+	 * Overrides the toString method of string class to give a singular line containing account info for text file
+	 */
+	@Override
 	public String toString() {
 		return this.name + "," + this.email + "," + this.pswd + "," + this.dob + "," + this.accType;
 	}
@@ -73,12 +112,14 @@ public class Account extends JFrame implements ActionListener {
 	 * Base home page method
 	 */
 	public static void HomePage() {
+		// declaring the Java swing attributes used for the GUI
 		JFrame homePage;
 		JPanel acctPanel = new JPanel(new GridLayout(5, 1)), panel = new JPanel(),
 				searchPanel = new JPanel(new FlowLayout()), tempSearchPanel = new JPanel(), songsPanel = new JPanel(),
 				mainPanel = new JPanel(new BorderLayout());
 		JLabel genre, era, songs, account, search;
 
+		// defines account for the current user
 		Account currUser = LoginPage.currUser;
 
 		homePage = new JFrame();
@@ -92,6 +133,7 @@ public class Account extends JFrame implements ActionListener {
 		account = new JLabel("Your Account: ");
 		search = new JLabel("Search results: ");
 
+		// button for account info, followed by the action listener for the click to have functionality
 		JButton profile = new JButton("Account information");
 		profile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -99,6 +141,7 @@ public class Account extends JFrame implements ActionListener {
 			}
 		});
 
+		// button for deciding which account page to pull up, followed by the action listener for the click to have functionality
 		JButton type = new JButton();
 		if (currUser.getAccType().equals("Artist")) {
 			account = new JLabel(currUser.name + ":  Artist");
@@ -125,10 +168,11 @@ public class Account extends JFrame implements ActionListener {
 			});
 		}
 
+		// buttons for viewing playlists and albums NOT YET IMPLEMENTED
 		JButton playlists = new JButton("Playlists");
 		JButton albums = new JButton("Albums");
 
-		// define options
+		// define options for the search from boxes
 		String[] genres = { "Alernative", "Country", "Hip Hop / Rap", "Rock" };
 		final JComboBox<String> genreBox = new JComboBox<String>(genres);
 
@@ -144,6 +188,7 @@ public class Account extends JFrame implements ActionListener {
 		// search button box
 		JButton searchBox = new JButton("Search b");
 
+		// action listener to take the selected box options and search for results
 		searchBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String gSelection = (String) genreBox.getSelectedItem();
@@ -161,15 +206,18 @@ public class Account extends JFrame implements ActionListener {
 		// search button
 		JButton searchB = new JButton("Search");
 
-		JTextField searchBar = new JTextField(45);
+		// defining the search box functions and panels
+		JTextField searchBar = new JTextField(60);
 		searchPanel.add(searchBar);
 		searchPanel.add(searchB);
 		searchPanel.add(tempSearchPanel, BorderLayout.CENTER);
 
 		// testing JLabel to print search functionality
+		JLabel test = new JLabel(searchBar.getText());
 
 		searchB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				searchPanel.add(test);
 				String searchQuery;
 				searchQuery = searchBar.getText();
 				// send the search into database find method
@@ -177,7 +225,10 @@ public class Account extends JFrame implements ActionListener {
 
 		});
 
+		// add the search button
 		tempSearchPanel.add(search);
+		
+		// declaring a table for results to be generated 
 		String rows[][] = { { " Name ", " Artist ", " Year ", " Genre " },
 				{ " info ", " display ", " here ", " after " }, { " info ", " display ", " here ", " after " },
 				{ " info ", " display ", " here ", " after " } };
@@ -228,25 +279,65 @@ public class Account extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 
 	}
-
-	public static void findSong(String genre, String era) throws FileNotFoundException {
-		// check file for songs of these parameters
-//		File songFile = new File("SongList.txt");
-//		Scanner in = new Scanner(songFile);
-//		while (in.hasNextLine()) {
-//			String line = in.nextLine();
-//
-//			if (line.contains(genre)) {
-//				System.out.println(line);
-//			}
-//		}
-//
-//		in.close();
-
-		// populate variables with the song info to be in displayBox
-		System.out.println(genre + " " + era);
+	
+	/**
+	 * Helper method to compute the era that a particular song date was made
+	 * 
+	 * @param era, String of the exact year a song was made
+	 * @return String of the era the year falls under
+	 */
+	public static String computeEra(String era) {
+		int newEra = Integer.parseInt(era);
+		
+		if (newEra < 1980) {
+			return "70s";
+		} else if (newEra >= 1980 && newEra < 1990) {
+			return "80s";
+		} else if (newEra >= 1990 && newEra < 2000) {
+			return "90s";
+		} else if (newEra >= 2000 && newEra < 2010) {
+			return "2000s";
+		} else if (newEra >= 2010 && newEra < 2020) {
+			return "2010s";
+		} else {
+			return "Current";
+		}
 	}
 
+	/**
+	 * Method to find the song from the list of songs in the database according to the search boxes
+	 * 
+	 * @param genre, string 
+	 * @param era
+	 * @throws FileNotFoundException
+	 */
+	public static void findSong(String genre, String era) throws FileNotFoundException {
+		// check file for songs of these parameters
+		File songFile = new File("SongList.txt");
+		Scanner in = new Scanner(songFile);
+		// loop through list to acquire the song info as a string
+		while (in.hasNextLine()) {
+			String line = in.nextLine();
+			
+			// loop through song to find the era
+			// && line.contains(computeEra(era)
+			
+			// if statement to check if the song fits the criteria
+			if (line.contains(genre)) {
+				// printing song for now, *** later need to attach to the display table on main page
+				System.out.println(line);
+			}
+		}
+		// close the file reader connection
+		in.close();
+	}
+
+	/**
+	 * Method that will write the song info to the song list file
+	 * 
+	 * @param song, Song that will be added to the list
+	 * @throws FileNotFoundException
+	 */
 	public static void writeSongToFile(Song song) throws FileNotFoundException {
 		try (FileWriter fw = new FileWriter("SongList.txt", true);
 				BufferedWriter bw = new BufferedWriter(fw);
@@ -262,6 +353,16 @@ public class Account extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Method that will add the new song by using the attributes listed from the creation page
+	 * 
+	 * @param name
+	 * @param artist
+	 * @param album
+	 * @param year
+	 * @param genre
+	 * @throws FileNotFoundException
+	 */	
 	public static void addSong(String name, String artist, String album, int year, String genre)
 			throws FileNotFoundException {
 		Song song = new Song(name, artist, album, year, genre);
