@@ -31,6 +31,20 @@ class GoodTunezTester {
 		assertEquals(a1.getDob(), "12/01/1994");
 	}
 	
+	// BLACK BOX TESTS BELOW
+		
+		// Tester method to check era helper method to ensure that era is correctly computed (Black)
+		@Test
+		void computeEraTest() {
+			assertEquals("90s", Account.computeEra("1993"));
+			assertEquals("90s", Account.computeEra("1999"));
+			assertEquals("90s", Account.computeEra("1990"));
+			
+			assertEquals("2000s", Account.computeEra("2002"));
+			assertEquals("70s", Account.computeEra("1965"));
+			assertEquals("Current", Account.computeEra("2035"));
+		}
+	
 	// Tester method to verify that the login is functional (Black)
 	@Test
 	void loginVerificationTest() {
