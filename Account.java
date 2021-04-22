@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 public class Account extends JFrame implements ActionListener {
 		// global variables
@@ -142,11 +143,11 @@ public class Account extends JFrame implements ActionListener {
 		});
 
 		// button for deciding which account page to pull up, followed by the action listener for the click to have functionality
-		JButton type = new JButton();
+		JButton addSong = new JButton();
 		if (currUser.getAccType().equals("Artist")) {
 			account = new JLabel(currUser.name + ":  Artist");
-			type = new JButton("Add Songs");
-			type.addActionListener(new ActionListener() {
+			addSong = new JButton("Add Songs");
+			addSong.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					songPanel();
 				}
@@ -154,12 +155,12 @@ public class Account extends JFrame implements ActionListener {
 			});
 		} else if (currUser.getAccType().equals("Listener")) {
 			account = new JLabel(currUser.name + ":  Listener");
-			type = new JButton("Song List");
+			addSong = new JButton("Playlist");
 
-			type.addActionListener(new ActionListener() {
+			addSong.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						songList();
+					playlistPanel();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -169,7 +170,21 @@ public class Account extends JFrame implements ActionListener {
 		}
 
 		// buttons for viewing playlists and albums NOT YET IMPLEMENTED
-		JButton playlists = new JButton("Playlists");
+		JButton songList = new JButton("Song List");
+		
+		songList = new JButton("Song List");
+
+		songList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					songList();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
 		JButton albums = new JButton("Albums");
 
 		// define options for the search from boxes
@@ -256,8 +271,8 @@ public class Account extends JFrame implements ActionListener {
 		// account panel info addition
 		acctPanel.add(account);
 		acctPanel.add(profile);
-		acctPanel.add(type);
-		acctPanel.add(playlists);
+		acctPanel.add(addSong);
+		acctPanel.add(songList);
 		acctPanel.add(albums);
 
 		// homePage panel adding
@@ -461,7 +476,7 @@ public class Account extends JFrame implements ActionListener {
 			}
 
 		});
-		accFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		accFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	public static void songPanel() {
@@ -508,7 +523,7 @@ public class Account extends JFrame implements ActionListener {
 		addSong.setSize(650, 450);
 		addSong.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		addSong.setVisible(true);
-		addSong.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addSong.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -534,28 +549,32 @@ public class Account extends JFrame implements ActionListener {
 	public static void songList() throws IOException {
 		JFrame listFrame;
 		JPanel listPanel;
-		JTextArea songs;
+		JTable songTable;
+		DefaultTableModel model = new DefaultTableModel();
 		JScrollPane scrollSongs;
 
+		songTable = new JTable(model);
+		model.addColumn("Song");
+		model.addColumn("Artist");
+		model.addColumn("Album");
+		model.addColumn("Year");
+		model.addColumn("Genre");
+		
+		
 		listFrame = new JFrame();
 		listPanel = new JPanel();
-		songs = new JTextArea(200, 100);
-		scrollSongs = new JScrollPane(songs);
+
+		scrollSongs = new JScrollPane(songTable);
 		scrollSongs.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollSongs.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		songs.setEditable(false);
 
 		try {
 			BufferedReader in = new BufferedReader(new FileReader("SongList.txt"));
 			String inStr;
 			String[] songInfo;
-			String outStr;
 			while ((inStr = in.readLine()) != null) {
 				songInfo = inStr.split(",");
-				outStr = "Song: " + songInfo[0] + " Artist: " + songInfo[1] + " Album: " + songInfo[2] + " Year: "
-						+ songInfo[3] + " Genre: " + songInfo[4];
-				songs.append(outStr);
-				songs.append("\n");
+				model.addRow(songInfo);
 			}
 			in.close();
 		} catch (FileNotFoundException e) {
@@ -570,7 +589,45 @@ public class Account extends JFrame implements ActionListener {
 		listFrame.setSize(650, 450);
 		listFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		listFrame.setVisible(true);
-		listFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		listFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	}
+	
+	public static void playlistPanel() throws IOException {
+		JFrame playFrame = new JFrame();
+		JPanel panel = new JPanel(new BorderLayout());
+		JPanel inner = new JPanel(new GridLayout(0,2));
+		
+		JButton newPlay = new JButton("Create new playlist");
+		
+		try {
+			BufferedReader in = new BufferedReader(new FileReader("PlaylistList.txt"));
+			String inStr;
+			String[] songInfo;
+			int i = 0;
+			while ((inStr = in.readLine()) != null) {
+				songInfo = inStr.split(",");
+				JButton view = new JButton("View playlist");
+				inner.add(view);
+				JLabel playInfo = new JLabel(songInfo[0] + "'s playlist: " + songInfo[1]);
+				inner.add(playInfo);
+				panel.add(inner, BorderLayout.CENTER);
+				
+			}
+			in.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		panel.add(newPlay, BorderLayout.NORTH);
+//		panel.add(inner, BorderLayout.CENTER);
+		playFrame.add(panel);
+		
+		playFrame.setTitle("GoodTunez Song List");
+		playFrame.setSize(650, 450);
+		playFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		playFrame.setVisible(true);
+		playFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 }
 
