@@ -37,7 +37,7 @@ public class Song {
 	}
 	
 	public String toString() {
-		return this.name + "," + this.artist + "," + this.year + "," + this.genre;
+		return this.name + "," + this.artist + "," + this.album + "," + this.year + "," + this.genre;
 	}
 	
 }
