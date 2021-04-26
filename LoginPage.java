@@ -1,5 +1,11 @@
 package CSE201;
 
+/*
+ * This class will implement java swing libraries in order to create the GUI for our login page.
+ * Providing user abilities to login and create an account, while verifying the credentials.
+ * 
+ * @author GooDevelopment Company (C) 2021
+ */
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
@@ -28,8 +34,6 @@ public class LoginPage extends JFrame implements ActionListener {
 		pswd_label = new JLabel("Enter password: ");
 		pswd_text = new JPasswordField();
 
-		// ***** not sure what JLabel does *****
-		//
 		out = new JLabel();
 		// JButton to attempt a login
 		submit = new JButton("Log in");
