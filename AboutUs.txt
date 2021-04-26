@@ -1,0 +1,13 @@
+GoodTunez was created by GooDevelopment, a team of Miami University students Owen Campbell, Nick Prokup and Bryce Graffin.
+GoodTunez is a catalog of songs where listeners can view songs that were added by artists.
+
+Listeners tutorial:
+The search bar allows the listener to easily search to see if specific songs are in the database. Listeners can search by song name, genre and era.
+Account information button: allows the user to view and update their information if desired.
+Playlist button: allows a listener to view their and any other playlist that has been created by users.
+Song List button: shows the user a table of song name, music artist, album, year, and genre of all songs in the database.
+Album button: Similar to song list the album button shows a list of music albums in the database
+
+Artist tutorial: 
+The main difference between the artist and listener account is the ability to add songs to the database.
+To do this the artist must click on the add song button and fill out the necessary information.
