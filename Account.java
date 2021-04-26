@@ -30,8 +30,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+
 public class Account extends JFrame implements ActionListener {
-	// global variables
+		// global variables
 	String name, email, dob, accType;
 	private String pswd;
 
@@ -43,11 +44,11 @@ public class Account extends JFrame implements ActionListener {
 	/**
 	 * This is the full constructor for the account class
 	 * 
-	 * @param name,  String variable representing account name
-	 * @param email, String variable representing account email
-	 * @param pswd,  String variable representing account pswd
-	 * @param dob,   String variable representing account date of birth
-	 * @param type,  String variable representing account type
+	 * @param name, String variable representing account name 
+	 * @param email, String variable representing account email 
+	 * @param pswd, String variable representing account pswd
+	 * @param dob, String variable representing account date of birth  
+	 * @param type, String variable representing account type 
 	 */
 	Account(String name, String email, String pswd, String dob, String type) {
 		this.name = name;
@@ -103,8 +104,7 @@ public class Account extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Overrides the toString method of string class to give a singular line
-	 * containing account info for text file
+	 * Overrides the toString method of string class to give a singular line containing account info for text file
 	 */
 	@Override
 	public String toString() {
@@ -121,17 +121,7 @@ public class Account extends JFrame implements ActionListener {
 				searchPanel = new JPanel(new FlowLayout()), tempSearchPanel = new JPanel(), songsPanel = new JPanel(),
 				mainPanel = new JPanel(new BorderLayout());
 		JLabel genre, era, songs, account, search;
-		JButton about = new JButton("About us/ help");
-		about.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					aboutUsPanel();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
+
 		// defines account for the current user
 		Account currUser = LoginPage.currUser;
 
@@ -146,8 +136,7 @@ public class Account extends JFrame implements ActionListener {
 		account = new JLabel("Your Account: ");
 		search = new JLabel("Search results: ");
 
-		// button for account info, followed by the action listener for the click to
-		// have functionality
+		// button for account info, followed by the action listener for the click to have functionality
 		JButton profile = new JButton("Account information");
 		profile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -155,8 +144,7 @@ public class Account extends JFrame implements ActionListener {
 			}
 		});
 
-		// button for deciding which account page to pull up, followed by the action
-		// listener for the click to have functionality
+		// button for deciding which account page to pull up, followed by the action listener for the click to have functionality
 		JButton addSong = new JButton();
 		if (currUser.getAccType().equals("Artist")) {
 			account = new JLabel(currUser.name + ":  Artist");
@@ -174,7 +162,7 @@ public class Account extends JFrame implements ActionListener {
 			addSong.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						playlistPanel();
+					playlistPanel();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -185,7 +173,7 @@ public class Account extends JFrame implements ActionListener {
 
 		// buttons for viewing playlists and albums NOT YET IMPLEMENTED
 		JButton songList = new JButton("Song List");
-
+		
 		songList = new JButton("Song List");
 
 		songList.addActionListener(new ActionListener() {
@@ -198,21 +186,11 @@ public class Account extends JFrame implements ActionListener {
 				}
 			}
 		});
-
+		
 		JButton albums = new JButton("Albums");
-		albums.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					albumPanel();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
 
 		// define options for the search from boxes
-		String[] genres = { "Alernative", "Country", "Hip Hop / Rap", "Rock" };
+		String[] genres = { "Alernative", "Country", "Hip Hop / Rap", "Pop", "Rock" };
 		final JComboBox<String> genreBox = new JComboBox<String>(genres);
 
 		String[] eras = { "70s", "80s", "90s", "2000's", "2010s", "Current" };
@@ -225,7 +203,7 @@ public class Account extends JFrame implements ActionListener {
 		eraBox.setVisible(true);
 
 		// search button box
-		JButton searchBox = new JButton("Search b");
+		JButton searchBox = new JButton("Search");
 
 		// action listener to take the selected box options and search for results
 		searchBox.addActionListener(new ActionListener() {
@@ -254,33 +232,36 @@ public class Account extends JFrame implements ActionListener {
 		// testing JLabel to print search functionality
 		JLabel test = new JLabel(searchBar.getText());
 
+		// search functionality for the search bar
 		searchB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				searchPanel.add(test);
 				String searchQuery;
 				searchQuery = searchBar.getText();
 				// send the search into database find method
+				searchPanel.add(test);
+				
 			}
 
 		});
+		
 
 		// add the search button
 		tempSearchPanel.add(search);
-
-		// declaring a table for results to be generated
+		
+		// declaring a table for results to be generated 
 		String rows[][] = { { " Name ", " Artist ", " Year ", " Genre " },
 				{ " info ", " display ", " here ", " after " }, { " info ", " display ", " here ", " after " },
 				{ " info ", " display ", " here ", " after " } };
 		String columns[] = { " Name ", " Artist ", " Year ", " Genre " };
 		JTable displayBox = new JTable(rows, columns);
-		tempSearchPanel.add(displayBox);
+		// tempSearchPanel.add(displayBox);
 
 		// add the variables to the panels
 		panel.add(genre);
 		panel.add(genreBox);
-		panel.add(searchBox);
 		panel.add(era);
 		panel.add(eraBox);
+		panel.add(searchBox);
 
 		// songs list (liked songs)
 		songsPanel.add(songs);
@@ -304,7 +285,6 @@ public class Account extends JFrame implements ActionListener {
 		mainPanel.add(songsPanel, BorderLayout.EAST);
 		mainPanel.add(acctPanel, BorderLayout.WEST);
 		mainPanel.add(searchPanel, BorderLayout.CENTER);
-		mainPanel.add(about, BorderLayout.SOUTH);
 
 		homePage.setTitle("GoodTunez Home");
 		homePage.setSize(650, 450);
@@ -319,25 +299,23 @@ public class Account extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	/**
 	 * Helper method to compute the era that a particular song date was made
 	 * 
 	 * @param era, String of the exact year a song was made
 	 * @return String of the era the year falls under
 	 */
-	public static String computeEra(String era) {
-		int newEra = Integer.parseInt(era);
-
-		if (newEra < 1980) {
+	public static String computeEra(int year) {		
+		if (year < 1980) {
 			return "70s";
-		} else if (newEra >= 1980 && newEra < 1990) {
+		} else if (year >= 1980 && year < 1990) {
 			return "80s";
-		} else if (newEra >= 1990 && newEra < 2000) {
+		} else if (year >= 1990 && year < 2000) {
 			return "90s";
-		} else if (newEra >= 2000 && newEra < 2010) {
+		} else if (year >= 2000 && year < 2010) {
 			return "2000s";
-		} else if (newEra >= 2010 && newEra < 2020) {
+		} else if (year >= 2010 && year < 2020) {
 			return "2010s";
 		} else {
 			return "Current";
@@ -345,11 +323,10 @@ public class Account extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Method to find the song from the list of songs in the database according to
-	 * the search boxes
+	 * Method to find the song from the list of songs in the database according to the search boxes
 	 * 
-	 * @param genre, string
-	 * @param era
+	 * @param genre, String selected from the combo box
+	 * @param era, String selected from the combo box
 	 * @throws FileNotFoundException
 	 */
 	public static void findSong(String genre, String era) throws FileNotFoundException {
@@ -359,14 +336,22 @@ public class Account extends JFrame implements ActionListener {
 		// loop through list to acquire the song info as a string
 		while (in.hasNextLine()) {
 			String line = in.nextLine();
-
-			// loop through song to find the era
-			// && line.contains(computeEra(era)
-
+			
+			// create a song with the data and use getYear OR just take the year from the file
+			String tempYear = "";
+			tempYear = line.substring(line.indexOf(','), line.length());
+			for (int i = 0; i < 3; i++) {
+				tempYear = tempYear.substring(tempYear.indexOf(',')+1, tempYear.length());
+			}
+			// now that line is from the comma before the year to the end of line, just take next 4 letters
+			tempYear = tempYear.substring(0 ,4);
+			
+			// parse into integer
+			int year = Integer.parseInt(tempYear);
+						
 			// if statement to check if the song fits the criteria
-			if (line.contains(genre)) {
-				// printing song for now, *** later need to attach to the display table on main
-				// page
+			if (line.contains(genre) && era.equals(computeEra(year))) {
+				// printing song for now, *** later need to attach to the display table on main page
 				System.out.println(line);
 			}
 		}
@@ -396,22 +381,27 @@ public class Account extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Method that will add the new song by using the attributes listed from the
-	 * creation page
+	 * Method that will add the new song by using the attributes listed from the creation page
 	 * 
-	 * @param name
-	 * @param artist
-	 * @param album
-	 * @param year
-	 * @param genre
+	 * @param name, String attribute of the song object
+	 * @param artist, String attribute of the song object
+	 * @param album, String attribute of the song object
+	 * @param year, int attribute of the song object
+	 * @param genre, String attribute of the song object
 	 * @throws FileNotFoundException
-	 */
+	 */	
 	public static void addSong(String name, String artist, String album, int year, String genre)
 			throws FileNotFoundException {
 		Song song = new Song(name, artist, album, year, genre);
 		writeSongToFile(song);
 	}
 
+	/**
+	 * 
+	 * @param acc
+	 * @param newAcc
+	 * @throws FileNotFoundException
+	 */
 	public static void replaceAccInfo(Account acc, Account newAcc) throws FileNotFoundException {
 		try (FileWriter fw = new FileWriter("AccountList.txt", true);
 				BufferedWriter bw = new BufferedWriter(fw);
@@ -446,7 +436,13 @@ public class Account extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Method creates the panel that will allow the user to edit and update their account information
+	 * 
+	 * @param currUser, Account object to update the account information
+	 */
 	public static void accountPanel(Account currUser) {
+		// declare the variables
 		JFrame accFrame;
 		JPanel info, panel;
 		JLabel info_label, email_label, pswd_label, name_label, dob_label, sub_button;
@@ -458,6 +454,7 @@ public class Account extends JFrame implements ActionListener {
 		info = new JPanel();
 		info.add(info_label);
 
+		// Listing the current data that is in each variable
 		name_label = new JLabel("Listed name: ");
 		email_label = new JLabel("Listed email: ");
 		pswd_label = new JLabel("Listed password: ");
@@ -471,6 +468,7 @@ public class Account extends JFrame implements ActionListener {
 		sub_button = new JLabel("Update information");
 		update = new JButton("Update");
 
+		// editing the layout of the update panel
 		panel = new JPanel(new GridLayout(6, 2));
 		panel.add(name_label);
 		panel.add(name_text);
@@ -491,6 +489,8 @@ public class Account extends JFrame implements ActionListener {
 		accFrame.setTitle("Account Information");
 		accFrame.setSize(650, 450);
 		accFrame.setVisible(true);
+		
+		// action listener to actually change the data
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Account update = new Account(name_text.getText(), email_text.getText(), pswd_text.getText(),
@@ -507,13 +507,18 @@ public class Account extends JFrame implements ActionListener {
 		accFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
+	/**
+	 * Method creates and displays the panel to input a song's data
+	 */
 	public static void songPanel() {
+		// declare the variables
 		JFrame addSong;
 		JPanel info;
 		JLabel name_label, artist_label, album_label, year_label, genre_label, sub_label;
 		JTextField name_text, artist_text, album_text, year_text, genre_text;
 		JButton submit;
 
+		// creating labels for input
 		name_label = new JLabel("Enter name of song: ");
 		artist_label = new JLabel("Enter artist name: ");
 		album_label = new JLabel("Album name: ");
@@ -521,14 +526,17 @@ public class Account extends JFrame implements ActionListener {
 		genre_label = new JLabel("Enter song genre: ");
 		sub_label = new JLabel();
 
+		// text fields for the input of the song info
 		name_text = new JTextField();
 		artist_text = new JTextField();
 		album_text = new JTextField();
 		year_text = new JTextField();
 		genre_text = new JTextField();
 
+		// button to submit this information
 		submit = new JButton("Add song to database");
 
+		// adding the information to the panel
 		info = new JPanel(new GridLayout(7, 2));
 		info.add(name_label);
 		info.add(name_text);
@@ -553,6 +561,7 @@ public class Account extends JFrame implements ActionListener {
 		addSong.setVisible(true);
 		addSong.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+		// submit button that will take the data entered and add it to song list
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -570,24 +579,32 @@ public class Account extends JFrame implements ActionListener {
 		});
 	}
 
-	public static Song searchBarReturn(String song) {
+	public Song searchBarReturn(String songAttribute) {
 		return null;
 	}
 
+	/**
+	 * Method will make a table of the songs in the list
+	 * 
+	 * @throws IOException
+	 */
 	public static void songList() throws IOException {
+		// declare variables
 		JFrame listFrame;
 		JPanel listPanel;
 		JTable songTable;
 		DefaultTableModel model = new DefaultTableModel();
 		JScrollPane scrollSongs;
 
+		// creates table
 		songTable = new JTable(model);
 		model.addColumn("Song");
 		model.addColumn("Artist");
 		model.addColumn("Album");
 		model.addColumn("Year");
 		model.addColumn("Genre");
-
+		
+		
 		listFrame = new JFrame();
 		listPanel = new JPanel();
 
@@ -595,6 +612,7 @@ public class Account extends JFrame implements ActionListener {
 		scrollSongs.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollSongs.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
+		// try catch to read the info from the song list to put into the table
 		try {
 			BufferedReader in = new BufferedReader(new FileReader("SongList.txt"));
 			String inStr;
@@ -618,14 +636,18 @@ public class Account extends JFrame implements ActionListener {
 		listFrame.setVisible(true);
 		listFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
-
+	
+	/**
+	 * 
+	 * @throws IOException
+	 */
 	public static void playlistPanel() throws IOException {
 		JFrame playFrame = new JFrame();
 		JPanel panel = new JPanel(new BorderLayout());
-		JPanel inner = new JPanel(new GridLayout(0, 2));
-
+		JPanel inner = new JPanel(new GridLayout(0,2));
+		
 		JButton newPlay = new JButton("Create new playlist");
-
+		
 		try {
 			BufferedReader in = new BufferedReader(new FileReader("PlaylistList.txt"));
 			String inStr;
@@ -638,18 +660,18 @@ public class Account extends JFrame implements ActionListener {
 				JLabel playInfo = new JLabel(songInfo[0] + "'s playlist: " + songInfo[1]);
 				inner.add(playInfo);
 				panel.add(inner, BorderLayout.CENTER);
-
+				
 			}
 			in.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 		panel.add(newPlay, BorderLayout.NORTH);
 //		panel.add(inner, BorderLayout.CENTER);
 		playFrame.add(panel);
-
+		
 		playFrame.setTitle("GoodTunez Song List");
 		playFrame.setSize(650, 450);
 		playFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
