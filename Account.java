@@ -1,5 +1,10 @@
 package CSE201;
-
+/*
+ * This class contains the account types as well as depending on which account is in use, 
+ * the home page that will be displayed to handle any function provided the home page.
+ * 
+ *  @author, GooDevelopment Co. (C) 2021
+ */
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -29,7 +34,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-
 
 public class Account extends JFrame implements ActionListener {
 		// global variables
@@ -122,6 +126,18 @@ public class Account extends JFrame implements ActionListener {
 				mainPanel = new JPanel(new BorderLayout());
 		JLabel genre, era, songs, account, search;
 
+		JButton about = new JButton("About us/ help");
+		about.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					aboutUsPanel();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
 		// defines account for the current user
 		Account currUser = LoginPage.currUser;
 
@@ -220,9 +236,13 @@ public class Account extends JFrame implements ActionListener {
 
 		});
 
-		// search button
+		// search bar button
 		JButton searchB = new JButton("Search");
 
+		// add a label to the search bar
+		JLabel searchMSG = new JLabel("Search a song attribute (RAPSTAR) or (1995) :");
+		searchPanel.add(searchMSG);
+		
 		// defining the search box functions and panels
 		JTextField searchBar = new JTextField(60);
 		searchPanel.add(searchBar);
@@ -237,9 +257,12 @@ public class Account extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				String searchQuery;
 				searchQuery = searchBar.getText();
-				// send the search into database find method
-				searchPanel.add(test);
-				
+				try {
+					searchBarReturn(searchQuery);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 
 		});
@@ -285,6 +308,7 @@ public class Account extends JFrame implements ActionListener {
 		mainPanel.add(songsPanel, BorderLayout.EAST);
 		mainPanel.add(acctPanel, BorderLayout.WEST);
 		mainPanel.add(searchPanel, BorderLayout.CENTER);
+		mainPanel.add(about, BorderLayout.SOUTH);
 
 		homePage.setTitle("GoodTunez Home");
 		homePage.setSize(650, 450);
@@ -579,8 +603,31 @@ public class Account extends JFrame implements ActionListener {
 		});
 	}
 
-	public Song searchBarReturn(String songAttribute) {
-		return null;
+	/**
+	 * Method will take the input from the search bar and check if it is anywhere in the database
+	 * 
+	 * @param searchQuery, String of the search bar input
+	 * @throws FileNotFoundException
+	 */
+	public static void searchBarReturn(String searchQuery) throws FileNotFoundException {
+		// flag for search found
+		boolean flag = false;
+		// send the search into database find method
+		File songFile = new File("SongList.txt");
+		Scanner in = new Scanner(songFile);
+		// loop through list to find line containing 
+		while (in.hasNextLine()) {
+			String line = in.nextLine(); 
+			if (line.contains(searchQuery)) {
+				// add to the table
+				System.out.println(line);
+				flag = true;
+			}
+		}
+		in.close();
+		
+		if (!flag) 
+			System.out.println("Song not in database");
 	}
 
 	/**
@@ -678,7 +725,12 @@ public class Account extends JFrame implements ActionListener {
 		playFrame.setVisible(true);
 		playFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
-
+	
+	/**
+	 * Method will frame the about us panel
+	 * 
+	 * @throws IOException
+	 */
 	public static void aboutUsPanel() throws IOException {
 		JFrame aboutFrame = new JFrame();
 		JPanel panel = new JPanel();
@@ -706,7 +758,12 @@ public class Account extends JFrame implements ActionListener {
 		aboutFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 	}
-
+	
+	/**
+	 * Method provides the table of the albums
+	 * 
+	 * @throws IOException
+	 */
 	public static void albumPanel() throws IOException {
 		JFrame album = new JFrame();
 		JPanel panel = new JPanel();
@@ -765,6 +822,13 @@ public class Account extends JFrame implements ActionListener {
 		album.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		album.setVisible(true);
 		album.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+	}
+}
+
+class Admin {
+
+	public void editAccount() {
 
 	}
 }
