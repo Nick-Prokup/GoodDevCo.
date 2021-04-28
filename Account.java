@@ -137,9 +137,7 @@ public class Account extends JFrame implements ActionListener {
 
 		// defines account for the current user
 		Account currUser = LoginPage.currUser;
-
 		homePage = new JFrame();
-
 		homePage.add(mainPanel);
 
 		// display labels
@@ -170,7 +168,6 @@ public class Account extends JFrame implements ActionListener {
 		profile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearComponent(mainPanel);
-				
 				JPanel acc = accountPanel(currUser);
 				mainPanel.add(acc, BorderLayout.CENTER);
 				homePage.setVisible(true);
@@ -713,10 +710,11 @@ public class Account extends JFrame implements ActionListener {
 		DefaultTableModel model = new DefaultTableModel();
 		JScrollPane scrollPane;
 		String[] playInfo = new String[2];
-
+		
 		playTable = new JTable(model);
 		model.addColumn("User");
 		model.addColumn("Playlist");
+		
 		JButton newPlay = new JButton("Create new playlist");
 
 		try {
@@ -793,6 +791,20 @@ public class Account extends JFrame implements ActionListener {
 		panel.add(newPlay, BorderLayout.NORTH);
 		panel.add(inner, BorderLayout.CENTER);
 
+		newPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+			//		panel.removeAll();
+			//		JPanel newPlay = createPlaylist();
+			//		panel.add(newPlay);		
+			//		panel.setVisible(true);
+					
+					createPlaylist();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		return panel;
 	}
 
@@ -917,12 +929,161 @@ public class Account extends JFrame implements ActionListener {
 		panel.add(scrollText);
 		return panel;
 	}
-	
+
+	public static void createPlaylist() throws IOException {
+		// declare variables
+		JPanel panel = new JPanel(new BorderLayout());
+		JPanel labels = new JPanel(new GridLayout(2,2));
+		JPanel songSelec = new JPanel(new GridLayout(1,2));
+		JPanel inner = new JPanel(new BorderLayout());
+		JLabel info = new JLabel("Left click song to add to playlist, right click to remove from current playlist");
+		JTable songTable, currTable;
+		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel currModel = new DefaultTableModel();
+		JScrollPane scrollSongs, scrollText;
+
+		JLabel nameLabel = new JLabel("Enter name of playlist: ");
+		JTextField nameText = new JTextField();
+		
+		// creates table
+		JLabel song = new JLabel("Songlist");
+		songTable = new JTable(model);
+		model.addColumn("Song");
+		model.addColumn("Artist");
+		model.addColumn("Album");
+		model.addColumn("Year");
+		model.addColumn("Genre");
+		
+		JLabel curr = new JLabel("Current songs in playlist");
+		currTable = new JTable(currModel);
+		currModel.addColumn("Song");
+		currModel.addColumn("Artist");
+		currModel.addColumn("Album");
+		currModel.addColumn("Year");
+		currModel.addColumn("Genre");
+
+		scrollSongs = new JScrollPane(songTable);
+		scrollSongs.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollSongs.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
+		scrollText = new JScrollPane(currTable);
+		scrollText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollText.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
+		JFrame newPlay = new JFrame();
+
+		songTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent event) {
+				if (event.getButton() == MouseEvent.BUTTON1) {
+					int row = songTable.rowAtPoint(event.getPoint());
+					String selecSong = songTable.getValueAt(row, 0).toString();
+					String selecArtist = songTable.getValueAt(row, 1).toString();
+					String selecAlbum = songTable.getValueAt(row, 2).toString();
+					String selecYear = songTable.getValueAt(row, 3).toString();
+					String selecGenre = songTable.getValueAt(row, 4).toString();
+					String[] addTo = {selecSong, selecArtist, selecAlbum, selecYear, selecGenre};
+					currModel.addRow(addTo);
+				} 
+			}
+		});
+		
+		currTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent event) {
+				if (event.getButton() == MouseEvent.BUTTON3) {
+					int row = songTable.rowAtPoint(event.getPoint());
+					currModel.removeRow(row);
+				}
+			}
+		});
+		// try catch to read the info from the song list to put into the table
+		try {
+			BufferedReader in = new BufferedReader(new FileReader("SongList.txt"));
+			String inStr;
+			String[] songInfo;
+			while ((inStr = in.readLine()) != null) {
+				songInfo = inStr.split(",");
+				model.addRow(songInfo);
+			}
+			in.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		JButton sub = new JButton("Create Playlist");
+		sub.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try (FileWriter fw = new FileWriter("PlaylistList.txt", true);
+						BufferedWriter bw = new BufferedWriter(fw);
+						PrintWriter out = new PrintWriter(bw);
+						BufferedReader in = new BufferedReader(new FileReader("PlaylistList.txt"));) {
+
+					Account currUser = LoginPage.currUser;
+					
+					fw.write("\n" + currUser.getName() + ",");
+					fw.write(nameText.getText() + ",");
+					// while there is still data in the playlist list
+					for (int i = 0; i < currTable.getRowCount(); i++) {
+						String song = currTable.getValueAt(i, 0).toString();
+						String artist = currTable.getValueAt(i, 1).toString();
+						String album = currTable.getValueAt(i, 2).toString();
+						String year = currTable.getValueAt(i, 3).toString();
+						String genre = currTable.getValueAt(i, 4).toString();
+						
+						if (i != currTable.getRowCount()) {
+							fw.write(song + "," + artist + "," + album + "," + year + "," + genre + ",");
+						} else {
+							fw.write(song + "," + artist + "," + album + "," + year + "," + genre);
+						}
+					}
+					
+					in.close();
+					fw.close();
+					bw.close();
+					out.close();
+					
+					newPlay.dispose();
+				} catch (IOException e1) {
+					System.out.println("Error appending new playlist information");
+				}
+				
+
+			}
+		});
+		
+		labels.add(nameLabel);
+		labels.add(nameText);
+		
+		labels.add(song);
+		labels.add(curr);
+		songSelec.add(scrollSongs);
+		songSelec.add(scrollText);
+		
+		inner.add(labels, BorderLayout.NORTH);
+		inner.add(songSelec, BorderLayout.CENTER);
+		
+		panel.add(info, BorderLayout.NORTH);
+		panel.add(inner, BorderLayout.CENTER);
+		panel.add(sub, BorderLayout.SOUTH);
+		
+	//	return panel;
+		
+		newPlay.add(panel);
+		newPlay.setTitle("CreatePlaylist");
+		newPlay.setSize(650, 450);
+		newPlay.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		newPlay.setVisible(true);
+
+		newPlay.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+	}
+
 	public static void clearComponent(JPanel panel) {
-		BorderLayout layout = (BorderLayout)panel.getLayout();
+		BorderLayout layout = (BorderLayout) panel.getLayout();
 		if (layout.getLayoutComponent(BorderLayout.CENTER) != null) {
 			panel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
 		}
-		
+
 	}
 }
