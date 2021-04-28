@@ -48,9 +48,9 @@ public class Account extends JFrame implements ActionListener {
 	String name, email, dob, accType;
 	private String pswd;
 
+	// main method where our login page is called
 	public static void main(String[] args) {
 		new LoginPage();
-
 	}
 
 	/**
@@ -176,11 +176,11 @@ public class Account extends JFrame implements ActionListener {
 
 		// button for deciding which account page to pull up, followed by the action
 		// listener for the click to have functionality
-		JButton addSong = new JButton();
-		if (currUser.getAccType().equals("Artist")) {
+		JButton add = new JButton();
+		if (currUser.getAccType().equals("Artist")) { // Displays appropriate information for artists
 			account = new JLabel(currUser.name + ":  Artist");
-			addSong = new JButton("Add Songs");
-			addSong.addActionListener(new ActionListener() {
+			add = new JButton("Add Songs");
+			add.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					clearComponent(mainPanel);
 					JPanel song = songPanel();
@@ -189,11 +189,11 @@ public class Account extends JFrame implements ActionListener {
 				}
 
 			});
-		} else if (currUser.getAccType().equals("Listener")) {
+		} else if (currUser.getAccType().equals("Listener")) { // Displays appropriate information for listeners
 			account = new JLabel(currUser.name + ":  Listener");
-			addSong = new JButton("Playlist");
-
-			addSong.addActionListener(new ActionListener() {
+			add = new JButton("Playlist");
+			// Adding functionality to the play list button
+			add.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
 						clearComponent(mainPanel);
@@ -207,11 +207,9 @@ public class Account extends JFrame implements ActionListener {
 			});
 		}
 
-		// buttons for viewing playlists and albums NOT YET IMPLEMENTED
+		// buttons for viewing song list
 		JButton songList = new JButton("Song List");
-
 		songList = new JButton("Song List");
-
 		songList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -225,8 +223,8 @@ public class Account extends JFrame implements ActionListener {
 			}
 		});
 
+		// Button for viewing albums in database
 		JButton albums = new JButton("Albums");
-
 		albums.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -331,7 +329,7 @@ public class Account extends JFrame implements ActionListener {
 		// account panel info addition
 		acctPanel.add(account);
 		acctPanel.add(profile);
-		acctPanel.add(addSong);
+		acctPanel.add(add);
 		acctPanel.add(songList);
 		acctPanel.add(albums);
 
@@ -352,9 +350,9 @@ public class Account extends JFrame implements ActionListener {
 		homePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+	// Required unimplemented method for ActionListener class (unused)
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 	}
 
 	/**
@@ -394,7 +392,6 @@ public class Account extends JFrame implements ActionListener {
 		// loop through list to acquire the song info as a string
 		while (in.hasNextLine()) {
 			String line = in.nextLine();
-
 			// create a song with the data and use getYear OR just take the year from the
 			// file
 			String tempYear = "";
@@ -432,6 +429,7 @@ public class Account extends JFrame implements ActionListener {
 				PrintWriter out = new PrintWriter(bw)) {
 			out.println(song.toString());
 
+			// Closing files
 			fw.close();
 			bw.close();
 			out.close();
@@ -447,7 +445,7 @@ public class Account extends JFrame implements ActionListener {
 	 * @param name,   String attribute of the song object
 	 * @param artist, String attribute of the song object
 	 * @param album,  String attribute of the song object
-	 * @param year,   int attribute of the song object
+	 * @param year,   integer attribute of the song object
 	 * @param genre,  String attribute of the song object
 	 * @throws FileNotFoundException
 	 */
@@ -458,6 +456,8 @@ public class Account extends JFrame implements ActionListener {
 	}
 
 	/**
+	 * Method adds function to the account and changes information in the text file
+	 * given user input
 	 * 
 	 * @param acc
 	 * @param newAcc
@@ -477,16 +477,17 @@ public class Account extends JFrame implements ActionListener {
 				if (line.equals(acc.toString())) {
 					line = newAcc.toString();
 				} else {
-
 					inputBuffer.append(line);
 					inputBuffer.append("\n");
 				}
 			}
+
 			in.close();
 			FileOutputStream outFile = new FileOutputStream("AccountList.txt");
 			outFile.write(inputBuffer.toString().getBytes());
-			fw.write(newAcc.toString());
+			fw.write(newAcc.toString()); // Updating the text file with new information
 
+			// Closing files
 			outFile.close();
 			fw.close();
 			bw.close();
@@ -500,6 +501,7 @@ public class Account extends JFrame implements ActionListener {
 	 * Method creates the panel that will allow the user to edit and update their
 	 * account information
 	 * 
+	 * @return JFrame
 	 * @param currUser, Account object to update the account information
 	 */
 	public static JPanel accountPanel(Account currUser) {
@@ -557,6 +559,7 @@ public class Account extends JFrame implements ActionListener {
 
 		});
 
+		// Add labels and buttons to the panel to be returned
 		mainPanel = new JPanel();
 		mainPanel.add(info);
 		mainPanel.add(panel);
@@ -565,6 +568,8 @@ public class Account extends JFrame implements ActionListener {
 
 	/**
 	 * Method creates and displays the panel to input a song's data
+	 * 
+	 * @return JFrame
 	 */
 	public static JPanel songPanel() {
 		// declare the variables
@@ -654,6 +659,7 @@ public class Account extends JFrame implements ActionListener {
 	/**
 	 * Method will make a table of the songs in the list
 	 * 
+	 * @return JFrame
 	 * @throws IOException
 	 */
 	public static JPanel songList() throws IOException {
@@ -672,14 +678,13 @@ public class Account extends JFrame implements ActionListener {
 		model.addColumn("Genre");
 
 		listPanel = new JPanel();
-
+		// Create and set defaults to the scroll table
 		scrollSongs = new JScrollPane(songTable);
 		scrollSongs.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollSongs.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		// try catch to read the info from the song list to put into the table
-		try {
-			BufferedReader in = new BufferedReader(new FileReader("SongList.txt"));
+		try (BufferedReader in = new BufferedReader(new FileReader("SongList.txt"))) {
 			String inStr;
 			String[] songInfo;
 			while ((inStr = in.readLine()) != null) {
@@ -696,10 +701,13 @@ public class Account extends JFrame implements ActionListener {
 	}
 
 	/**
+	 * Method returns the panel that displays playist and playlist information
 	 * 
+	 * @return JPanel
 	 * @throws IOException
 	 */
 	public static JPanel playlistPanel() throws IOException {
+		// Initialize panels and panel components
 		JPanel panel = new JPanel(new BorderLayout());
 		JPanel inner = new JPanel(new GridLayout(1, 2));
 		JTable songList;
@@ -710,15 +718,16 @@ public class Account extends JFrame implements ActionListener {
 		DefaultTableModel model = new DefaultTableModel();
 		JScrollPane scrollPane;
 		String[] playInfo = new String[2];
-		
+
 		playTable = new JTable(model);
 		model.addColumn("User");
 		model.addColumn("Playlist");
-		
+
 		JButton newPlay = new JButton("Create new playlist");
 
-		try {
-			BufferedReader in = new BufferedReader(new FileReader("PlaylistList.txt"));
+		// Read from the text file to get play list components to be added to the table
+		try (BufferedReader in = new BufferedReader(new FileReader("PlaylistList.txt"))) {
+
 			String inStr;
 			String[] songInfo;
 			while ((inStr = in.readLine()) != null) {
@@ -732,6 +741,7 @@ public class Account extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 
+		// Creating table header
 		songList = new JTable(sModel);
 		sModel.addColumn("Song");
 		sModel.addColumn("Artist");
@@ -739,9 +749,11 @@ public class Account extends JFrame implements ActionListener {
 		sModel.addColumn("Year");
 		sModel.addColumn("Genre");
 
+		// Adding mouse listener to the song table
 		playTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent event) {
+				// When left clicked add clicked song to play list table
 				if (event.getButton() == MouseEvent.BUTTON1) {
 					sModel.setRowCount(0);
 					int row = playTable.rowAtPoint(event.getPoint());
@@ -778,27 +790,25 @@ public class Account extends JFrame implements ActionListener {
 			}
 		});
 
+		// Create and initialize play list table
 		scrollPane = new JScrollPane(playTable);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
+		// Create and initialize song list table
 		scrollText = new JScrollPane(songList);
 		scrollText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollText.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
+		// Add tables and labels to appropriate panels
 		inner.add(scrollPane);
 		inner.add(scrollText);
 		panel.add(newPlay, BorderLayout.NORTH);
 		panel.add(inner, BorderLayout.CENTER);
 
+		// Add action listener to button to call createPlaylist() method
 		newPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-			//		panel.removeAll();
-			//		JPanel newPlay = createPlaylist();
-			//		panel.add(newPlay);		
-			//		panel.setVisible(true);
-					
 					createPlaylist();
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -811,13 +821,16 @@ public class Account extends JFrame implements ActionListener {
 	/**
 	 * Method will frame the about us panel
 	 * 
+	 * @return JPanel
 	 * @throws IOException
 	 */
 	public static JPanel aboutUsPanel() throws IOException {
+		// Create and initialize JPanel and it's components
 		JPanel panel = new JPanel();
 		JTextArea aboutUs = new JTextArea();
 		aboutUs.setEditable(false);
 
+		// Read information from the text file and append it to the textArea
 		try (BufferedReader in = new BufferedReader(new FileReader("AboutUs.txt"));) {
 			String inStr;
 			while ((inStr = in.readLine()) != null) {
@@ -836,9 +849,11 @@ public class Account extends JFrame implements ActionListener {
 	/**
 	 * Method provides the table of the albums
 	 * 
+	 * @return JPanel
 	 * @throws IOException
 	 */
 	public static JPanel albumPanel() throws IOException {
+		// Initialize and create JPanel and it's components
 		JPanel panel = new JPanel(new GridLayout(1, 2));
 		ArrayList<String> albumList = new ArrayList<>();
 		JTextArea songList;
@@ -848,12 +863,15 @@ public class Account extends JFrame implements ActionListener {
 		DefaultTableModel model = new DefaultTableModel();
 		JScrollPane scrollPane;
 
+		// Add header to album table
 		albumTable = new JTable(model);
 		model.addColumn("Artist");
 		model.addColumn("Album");
 
 		songList = new JTextArea();
 		songList.setEditable(false);
+
+		// When desired album is pressed it displays album information
 		albumTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent event) {
@@ -866,11 +884,9 @@ public class Account extends JFrame implements ActionListener {
 					try (BufferedReader in = new BufferedReader(new FileReader("SongList.txt"));) {
 						String inStr;
 						String[] songInfo;
-
 						while ((inStr = in.readLine()) != null) {
 							songInfo = inStr.split(",");
 							String albumName = songInfo[2];
-
 							if (albumName.equals(selecName)) {
 								songList.append(songInfo[0] + ", " + songInfo[3] + ", " + songInfo[4] + "\n");
 							}
@@ -885,6 +901,7 @@ public class Account extends JFrame implements ActionListener {
 			}
 		});
 
+		// Create and add defaults to songList and albumTable
 		scrollText = new JScrollPane(songList);
 		scrollText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollText.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -893,14 +910,13 @@ public class Account extends JFrame implements ActionListener {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-		try {
-			BufferedReader in = new BufferedReader(new FileReader("SongList.txt"));
+		// Adds information to the album table from SongList.txt
+		try (BufferedReader in = new BufferedReader(new FileReader("SongList.txt"))) {
 			String inStr;
 			String[] songInfo;
 			String[] albumInfo = new String[2];
 			int count = 0;
 			while ((inStr = in.readLine()) != null) {
-
 				songInfo = inStr.split(",");
 				String albumName = songInfo[2];
 				if (count == 0) {
@@ -910,6 +926,8 @@ public class Account extends JFrame implements ActionListener {
 					model.addRow(albumInfo);
 				}
 				count++;
+
+				// Determines if album is already in the table and updates if not
 				for (int i = 0; i < albumList.size(); i++) {
 					if (!albumName.equals(albumList.get(i))) {
 						albumList.add(albumName);
@@ -918,23 +936,29 @@ public class Account extends JFrame implements ActionListener {
 						model.addRow(albumInfo);
 					}
 				}
-
 			}
 			in.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 
+		// Add and return JPanel elements
 		panel.add(scrollPane);
 		panel.add(scrollText);
 		return panel;
 	}
 
+	/*
+	 * Method creates a new JFrame that displays the create play list tables and
+	 * functions
+	 * 
+	 * @throws IOException
+	 */
 	public static void createPlaylist() throws IOException {
-		// declare variables
+		// Declare and initialize JPanel and it's components
 		JPanel panel = new JPanel(new BorderLayout());
-		JPanel labels = new JPanel(new GridLayout(2,2));
-		JPanel songSelec = new JPanel(new GridLayout(1,2));
+		JPanel labels = new JPanel(new GridLayout(2, 2));
+		JPanel songSelec = new JPanel(new GridLayout(1, 2));
 		JPanel inner = new JPanel(new BorderLayout());
 		JLabel info = new JLabel("Left click song to add to playlist, right click to remove from current playlist");
 		JTable songTable, currTable;
@@ -944,8 +968,8 @@ public class Account extends JFrame implements ActionListener {
 
 		JLabel nameLabel = new JLabel("Enter name of playlist: ");
 		JTextField nameText = new JTextField();
-		
-		// creates table
+
+		// Create table and add header for list of songs
 		JLabel song = new JLabel("Songlist");
 		songTable = new JTable(model);
 		model.addColumn("Song");
@@ -953,7 +977,8 @@ public class Account extends JFrame implements ActionListener {
 		model.addColumn("Album");
 		model.addColumn("Year");
 		model.addColumn("Genre");
-		
+
+		// Create table and add header for songs in play list
 		JLabel curr = new JLabel("Current songs in playlist");
 		currTable = new JTable(currModel);
 		currModel.addColumn("Song");
@@ -962,16 +987,19 @@ public class Account extends JFrame implements ActionListener {
 		currModel.addColumn("Year");
 		currModel.addColumn("Genre");
 
+		// Initialize and set defaults for tables
 		scrollSongs = new JScrollPane(songTable);
 		scrollSongs.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollSongs.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		
+
 		scrollText = new JScrollPane(currTable);
 		scrollText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollText.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		
+
 		JFrame newPlay = new JFrame();
 
+		// Add a mouse listener to song table to add information
+		// to the current play list
 		songTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent event) {
@@ -982,12 +1010,14 @@ public class Account extends JFrame implements ActionListener {
 					String selecAlbum = songTable.getValueAt(row, 2).toString();
 					String selecYear = songTable.getValueAt(row, 3).toString();
 					String selecGenre = songTable.getValueAt(row, 4).toString();
-					String[] addTo = {selecSong, selecArtist, selecAlbum, selecYear, selecGenre};
+					String[] addTo = { selecSong, selecArtist, selecAlbum, selecYear, selecGenre };
 					currModel.addRow(addTo);
-				} 
+				}
 			}
 		});
-		
+
+		// Adds mouse listener to remove information from
+		// the current play list table
 		currTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent event) {
@@ -1010,7 +1040,8 @@ public class Account extends JFrame implements ActionListener {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
+		// Add action listener to button to submit created play list
 		JButton sub = new JButton("Create Playlist");
 		sub.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1020,65 +1051,66 @@ public class Account extends JFrame implements ActionListener {
 						BufferedReader in = new BufferedReader(new FileReader("PlaylistList.txt"));) {
 
 					Account currUser = LoginPage.currUser;
-					
+
 					fw.write("\n" + currUser.getName() + ",");
 					fw.write(nameText.getText() + ",");
-					// while there is still data in the playlist list
+					// Gets information from play list table and adds it to PlaylistList.txt
 					for (int i = 0; i < currTable.getRowCount(); i++) {
 						String song = currTable.getValueAt(i, 0).toString();
 						String artist = currTable.getValueAt(i, 1).toString();
 						String album = currTable.getValueAt(i, 2).toString();
 						String year = currTable.getValueAt(i, 3).toString();
 						String genre = currTable.getValueAt(i, 4).toString();
-						
+
 						if (i != currTable.getRowCount()) {
 							fw.write(song + "," + artist + "," + album + "," + year + "," + genre + ",");
 						} else {
 							fw.write(song + "," + artist + "," + album + "," + year + "," + genre);
 						}
 					}
-					
+
+					// Closes appropriate files
 					in.close();
 					fw.close();
 					bw.close();
 					out.close();
-					
+
 					newPlay.dispose();
 				} catch (IOException e1) {
 					System.out.println("Error appending new playlist information");
 				}
-				
 
 			}
 		});
-		
+
+		// Add to panels and JFrame
 		labels.add(nameLabel);
 		labels.add(nameText);
-		
 		labels.add(song);
 		labels.add(curr);
 		songSelec.add(scrollSongs);
 		songSelec.add(scrollText);
-		
+
 		inner.add(labels, BorderLayout.NORTH);
 		inner.add(songSelec, BorderLayout.CENTER);
-		
+
 		panel.add(info, BorderLayout.NORTH);
 		panel.add(inner, BorderLayout.CENTER);
 		panel.add(sub, BorderLayout.SOUTH);
-		
-	//	return panel;
-		
+
 		newPlay.add(panel);
 		newPlay.setTitle("CreatePlaylist");
 		newPlay.setSize(650, 450);
 		newPlay.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		newPlay.setVisible(true);
-
 		newPlay.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+
 	}
 
+	/*
+	 * Method clears the center component of a JPanel with BorderLayout
+	 * 
+	 */
 	public static void clearComponent(JPanel panel) {
 		BorderLayout layout = (BorderLayout) panel.getLayout();
 		if (layout.getLayoutComponent(BorderLayout.CENTER) != null) {
