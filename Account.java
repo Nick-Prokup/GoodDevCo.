@@ -430,7 +430,7 @@ public class Account extends JFrame implements ActionListener {
 			out.println(song.toString());
 
 			// Closing files
-			fw.close();
+		//	fw.close();
 			bw.close();
 			out.close();
 		} catch (IOException e1) {
@@ -508,11 +508,11 @@ public class Account extends JFrame implements ActionListener {
 		// declare the variables
 		JPanel info, panel, mainPanel;
 		JLabel info_label, email_label, pswd_label, name_label, dob_label, sub_button;
-		JTextField email_text, dob_text, name_text, pswd_text;
+		JTextField email_text, dob_text, pswd_text;
 		JButton update;
 
 		info_label = new JLabel(
-				"Edit any changes you want in the text field and update using the button at the bottom");
+				"Edit any changes you want in the text field and update using the button at the bottom (changes will not be displayed until database is reloaded)");
 		info = new JPanel();
 		info.add(info_label);
 
@@ -522,7 +522,7 @@ public class Account extends JFrame implements ActionListener {
 		pswd_label = new JLabel("Listed password: ");
 		dob_label = new JLabel("Listed birthday: ");
 
-		name_text = new JTextField(currUser.getName());
+		JLabel display_name = new JLabel(currUser.getName());
 		email_text = new JTextField(currUser.getEmail());
 		pswd_text = new JTextField(currUser.getPswd());
 		dob_text = new JTextField(currUser.getDob());
@@ -533,7 +533,7 @@ public class Account extends JFrame implements ActionListener {
 		// editing the layout of the update panel
 		panel = new JPanel(new GridLayout(6, 2));
 		panel.add(name_label);
-		panel.add(name_text);
+		panel.add(display_name);
 		panel.add(email_label);
 		panel.add(email_text);
 		panel.add(pswd_label);
@@ -547,7 +547,7 @@ public class Account extends JFrame implements ActionListener {
 		// action listener to actually change the data
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Account update = new Account(name_text.getText(), email_text.getText(), pswd_text.getText(),
+				Account update = new Account(currUser.getName(), email_text.getText(), pswd_text.getText(),
 						dob_text.getText(), currUser.getAccType());
 				try {
 					replaceAccInfo(currUser, update);
@@ -560,9 +560,9 @@ public class Account extends JFrame implements ActionListener {
 		});
 
 		// Add labels and buttons to the panel to be returned
-		mainPanel = new JPanel();
-		mainPanel.add(info);
-		mainPanel.add(panel);
+		mainPanel = new JPanel(new BorderLayout());
+		mainPanel.add(info, BorderLayout.NORTH);
+		mainPanel.add(panel, BorderLayout.CENTER);
 		return mainPanel;
 	}
 
@@ -575,7 +575,7 @@ public class Account extends JFrame implements ActionListener {
 		// declare the variables
 		JPanel info;
 		JLabel name_label, artist_label, album_label, year_label, genre_label, sub_label;
-		JTextField name_text, artist_text, album_text, year_text, genre_text;
+		JTextField name_text, album_text, year_text, genre_text;
 		JButton submit;
 
 		// creating labels for input
@@ -588,7 +588,7 @@ public class Account extends JFrame implements ActionListener {
 
 		// text fields for the input of the song info
 		name_text = new JTextField();
-		artist_text = new JTextField();
+		JLabel artist = new JLabel(LoginPage.currUser.getName());
 		album_text = new JTextField();
 		year_text = new JTextField();
 		genre_text = new JTextField();
@@ -601,7 +601,7 @@ public class Account extends JFrame implements ActionListener {
 		info.add(name_label);
 		info.add(name_text);
 		info.add(artist_label);
-		info.add(artist_text);
+		info.add(artist);
 		info.add(album_label);
 		info.add(album_text);
 		info.add(year_label);
@@ -617,7 +617,7 @@ public class Account extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					addSong(name_text.getText(), artist_text.getText(), album_text.getText(),
+					addSong(name_text.getText(), LoginPage.currUser.getName(), album_text.getText(),
 							Integer.parseInt(year_text.getText()), genre_text.getText());
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
@@ -666,7 +666,18 @@ public class Account extends JFrame implements ActionListener {
 		// declare variables
 		JPanel listPanel;
 		JTable songTable;
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};;
 		JScrollPane scrollSongs;
 
 		// creates table
@@ -711,11 +722,33 @@ public class Account extends JFrame implements ActionListener {
 		JPanel panel = new JPanel(new BorderLayout());
 		JPanel inner = new JPanel(new GridLayout(1, 2));
 		JTable songList;
-		DefaultTableModel sModel = new DefaultTableModel();
+		DefaultTableModel sModel = new DefaultTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};;
 		JScrollPane scrollText;
 
 		JTable playTable;
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};;
 		JScrollPane scrollPane;
 		String[] playInfo = new String[2];
 
@@ -860,7 +893,18 @@ public class Account extends JFrame implements ActionListener {
 		JScrollPane scrollText;
 
 		JTable albumTable;
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		JScrollPane scrollPane;
 
 		// Add header to album table
@@ -879,7 +923,7 @@ public class Account extends JFrame implements ActionListener {
 					int row = albumTable.rowAtPoint(event.getPoint());
 					String selecName = albumTable.getValueAt(row, 1).toString();
 					String selecArtist = albumTable.getValueAt(row, 0).toString();
-					songList.append("Songs in " + selecName + " by artist " + selecArtist + "\n");
+					songList.append("Songs in '" + selecName + "' by artist '" + selecArtist + "'\n");
 
 					try (BufferedReader in = new BufferedReader(new FileReader("SongList.txt"));) {
 						String inStr;
@@ -891,6 +935,7 @@ public class Account extends JFrame implements ActionListener {
 								songList.append(songInfo[0] + ", " + songInfo[3] + ", " + songInfo[4] + "\n");
 							}
 						}
+						songList.append("\n");
 						in.close();
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -929,12 +974,12 @@ public class Account extends JFrame implements ActionListener {
 
 				// Determines if album is already in the table and updates if not
 				for (int i = 0; i < albumList.size(); i++) {
-					if (!albumName.equals(albumList.get(i))) {
-						albumList.add(albumName);
-						albumInfo[0] = songInfo[1];
-						albumInfo[1] = albumName;
-						model.addRow(albumInfo);
-					}
+						if (!albumList.contains(albumName)) {
+							albumList.add(albumName);
+							albumInfo[0] = songInfo[1];
+							albumInfo[1] = albumName;
+							model.addRow(albumInfo);
+						}
 				}
 			}
 			in.close();
@@ -962,8 +1007,30 @@ public class Account extends JFrame implements ActionListener {
 		JPanel inner = new JPanel(new BorderLayout());
 		JLabel info = new JLabel("Left click song to add to playlist, right click to remove from current playlist");
 		JTable songTable, currTable;
-		DefaultTableModel model = new DefaultTableModel();
-		DefaultTableModel currModel = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};;
+		DefaultTableModel currModel = new DefaultTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};;
 		JScrollPane scrollSongs, scrollText;
 
 		JLabel nameLabel = new JLabel("Enter name of playlist: ");
