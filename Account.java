@@ -8,6 +8,7 @@ package CSE201;
  */
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -26,12 +27,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -133,7 +132,7 @@ public class Account extends JFrame implements ActionListener {
 		JPanel acctPanel = new JPanel(new GridLayout(5, 1)), panel = new JPanel(),
 				searchPanel = new JPanel(new FlowLayout()), tempSearchPanel = new JPanel(), songsPanel = new JPanel(),
 				mainPanel = new JPanel(new BorderLayout()), secPanel = new JPanel(new BorderLayout());
-		JLabel genre, era, songs, account, search;
+		JLabel genre, era, account, search;
 
 		// defines account for the current user
 		Account currUser = LoginPage.currUser;
@@ -143,7 +142,7 @@ public class Account extends JFrame implements ActionListener {
 		// display labels
 		genre = new JLabel("Search by Genre:");
 		era = new JLabel("Search by Era:");
-		songs = new JLabel("Liked Songs: \n");
+	//	songs = new JLabel("Liked Songs: \n");
 		account = new JLabel("Your Account: ");
 		search = new JLabel("Search results: ");
 
@@ -189,6 +188,7 @@ public class Account extends JFrame implements ActionListener {
 				}
 
 			});
+			
 		} else if (currUser.getAccType().equals("Listener")) { // Displays appropriate information for listeners
 			account = new JLabel(currUser.name + ":  Listener");
 			add = new JButton("Playlist");
@@ -235,7 +235,6 @@ public class Account extends JFrame implements ActionListener {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-
 			}
 		});
 		// define options for the search from boxes
@@ -265,7 +264,6 @@ public class Account extends JFrame implements ActionListener {
 					e1.printStackTrace();
 				}
 			}
-
 		});
 
 		// search bar button
@@ -282,32 +280,57 @@ public class Account extends JFrame implements ActionListener {
 		searchPanel.add(tempSearchPanel, BorderLayout.CENTER);
 
 		// testing JLabel to print search functionality
-		JLabel test = new JLabel(searchBar.getText());
+		JTable searchList;
+		DefaultTableModel model = new DefaultTableModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
+		
+		JScrollPane scrollSongs;
+		
+		
+		searchList = new JTable(model);
+		model.addColumn("Song");
+		model.addColumn("Artist");
+		model.addColumn("Album");
+		model.addColumn("Year");
+		model.addColumn("Genre");
+		
 		// search functionality for the search bar
 		searchB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String searchQuery;
+				ArrayList<String[]> result = new ArrayList<String[]>();
 				searchQuery = searchBar.getText();
+				
 				try {
-					searchBarReturn(searchQuery);
+					result = searchBarReturn(searchQuery);
+					model.setRowCount(0);
+					for (int i = 0; i < result.size(); i++) {
+						
+						model.addRow(result.get(i));
+					}
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
 			}
-
 		});
-
+		
+		scrollSongs = new JScrollPane(searchList);
+		scrollSongs.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollSongs.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollSongs.setPreferredSize(new Dimension (400,250));
+		
 		// add the search button
 		tempSearchPanel.add(search);
-
-		// declaring a table for results to be generated
-		String rows[][] = { { " Name ", " Artist ", " Year ", " Genre " },
-				{ " info ", " display ", " here ", " after " }, { " info ", " display ", " here ", " after " },
-				{ " info ", " display ", " here ", " after " } };
-		String columns[] = { " Name ", " Artist ", " Year ", " Genre " };
-		JTable displayBox = new JTable(rows, columns);
-		// tempSearchPanel.add(displayBox);
 
 		// add the variables to the panels
 		panel.add(genre);
@@ -317,14 +340,16 @@ public class Account extends JFrame implements ActionListener {
 		panel.add(searchBox);
 
 		// songs list (liked songs)
-		songsPanel.add(songs);
-		DefaultListModel<String> liked = new DefaultListModel<>();
-		liked.addElement("\n Song Name 1 \n");
-		liked.addElement("Song Name 2 \n");
-		liked.addElement("Song Name 3 \n");
-		liked.addElement("Song Name 4 \n");
-		JList<String> list = new JList<>(liked);
-		songsPanel.add(list);
+//		songsPanel.add(songs);
+		songsPanel.add(scrollSongs);
+		
+//		DefaultListModel<String> liked = new DefaultListModel<>();
+//		liked.addElement("\n Song Name 1 \n");
+//		liked.addElement("Song Name 2 \n");
+//		liked.addElement("Song Name 3 \n");
+//		liked.addElement("Song Name 4 \n");
+//		JList<String> list = new JList<>(liked);
+//		songsPanel.add(list);
 
 		// account panel info addition
 		acctPanel.add(account);
@@ -635,25 +660,24 @@ public class Account extends JFrame implements ActionListener {
 	 * @param searchQuery, String of the search bar input
 	 * @throws FileNotFoundException
 	 */
-	public static void searchBarReturn(String searchQuery) throws FileNotFoundException {
+	public static ArrayList<String[]> searchBarReturn(String searchQuery) throws FileNotFoundException {
 		// flag for search found
-		boolean flag = false;
+		ArrayList<String[]> search = new ArrayList<>();
 		// send the search into database find method
 		File songFile = new File("SongList.txt");
 		Scanner in = new Scanner(songFile);
 		// loop through list to find line containing
 		while (in.hasNextLine()) {
 			String line = in.nextLine();
+			String[] inSplit;
 			if (line.contains(searchQuery)) {
 				// add to the table
-				System.out.println(line);
-				flag = true;
+				inSplit = line.split(",");
+				search.add(inSplit);		
 			}
 		}
 		in.close();
-
-		if (!flag)
-			System.out.println("Song not in database");
+		return search;
 	}
 
 	/**
@@ -816,8 +840,6 @@ public class Account extends JFrame implements ActionListener {
 						in.close();
 					} catch (IOException e) {
 						e.printStackTrace();
-
-						System.out.println(selecName);
 					}
 				}
 			}
@@ -939,8 +961,6 @@ public class Account extends JFrame implements ActionListener {
 						in.close();
 					} catch (IOException e) {
 						e.printStackTrace();
-
-						System.out.println(selecName);
 					}
 				}
 			}
