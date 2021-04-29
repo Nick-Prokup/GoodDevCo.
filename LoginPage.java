@@ -16,6 +16,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class LoginPage extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// declare JFrame component variables
 	JFrame logFrame;
 	JPanel panel;
@@ -62,10 +66,11 @@ public class LoginPage extends JFrame implements ActionListener {
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String email = email_text.getText();
+				@SuppressWarnings("deprecation")
 				String pswd = pswd_text.getText();
 
 				// verification of the login credentials
-				if (email.equals("admin") && pswd.equals("admin") || loginVerification(email, pswd)) {
+				if (loginVerification(email, pswd)) {
 					out.setText("Login confirmed");
 					logFrame.dispose();
 					Account.HomePage();
@@ -86,13 +91,10 @@ public class LoginPage extends JFrame implements ActionListener {
 		// entire login frame
 		logFrame = new JFrame();
 		logFrame.add(panel);
-
 		logFrame.setTitle("GoodTunez Login");
 		logFrame.setSize(650, 450);
 		logFrame.setVisible(true);
-
 		logFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 	}
 
 	/**
